@@ -431,8 +431,10 @@ ssl.keystore.password=password
 ssl.key.password=password
 ```
 
+
 # Productivity
 
 <ul>
 <li><strong>Spring Assistant</strong> plugin for getting hints with properties</li>
+<li><a href="https://dzone.com/articles/running-apache-kafka-on-windows-os">Installing Kafka on windows]</a></li>
 </ul>
