@@ -431,3 +431,8 @@ ssl.keystore.password=password
 ssl.key.password=password
 ```
 
+# Productivity
+
+<ul>
+<li><strong>Spring Assistant</strong> plugin for getting hints with properties</li>
+</ul>
