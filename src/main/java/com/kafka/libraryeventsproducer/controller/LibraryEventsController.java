@@ -34,4 +34,10 @@ public class LibraryEventsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
     }
 
+    @PostMapping("/v1/libraryevent/producerecord")
+    public ResponseEntity<LibraryEvent> postLibraryEventUsingProducerRecord(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException, ExecutionException, InterruptedException {
+        this.producer.sendLibraryEventUsingProducerRecord(libraryEvent);
+        return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
+    }
+
 }

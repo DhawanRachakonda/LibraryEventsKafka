@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kafka.libraryeventsproducer.domain.LibraryEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -50,6 +51,26 @@ public class LibraryEventProducer {
         return message;
     }
 
+    public void sendLibraryEventUsingProducerRecord(LibraryEvent libraryEvent) throws JsonProcessingException {
+
+        String topic = "library-events";
+        Integer key = libraryEvent.getLibraryEventId();
+        String value = objectMapper.writeValueAsString(libraryEvent);
+        ProducerRecord<Integer, String> record = this.buildProducerRecord(topic, key, value);
+        ListenableFuture<SendResult<Integer, String>> listenableFuture = this.kafkaTemplate.send(record);
+        listenableFuture.addCallback(new ListenableFutureCallback<SendResult<Integer, String>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                handleFailure(key, value, throwable);
+            }
+
+            @Override
+            public void onSuccess(SendResult<Integer, String> integerStringSendResult) {
+                handleSuccess(key, value, integerStringSendResult);
+            }
+        });
+    }
+
     private void handleFailure(Integer key, String value, Throwable throwable) {
         log.error("Error sending the message and the exception is {}", throwable.getMessage());
         try {
@@ -63,4 +84,7 @@ public class LibraryEventProducer {
         log.info("Message sent successfully with key {}, value {} to partition {}", key, value, result.getRecordMetadata().partition());
     }
 
+    private ProducerRecord<Integer, String> buildProducerRecord(String topic, Integer key, String value) {
+        return new ProducerRecord<Integer, String>(topic, null, key, value, null);
+    }
 }
