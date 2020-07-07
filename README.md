@@ -437,4 +437,5 @@ ssl.key.password=password
 <ul>
 <li><strong>Spring Assistant</strong> plugin for getting hints with properties</li>
 <li><a href="https://dzone.com/articles/running-apache-kafka-on-windows-os">Installing Kafka on windows]</a></li>
+<li><a href="https://stackoverflow.com/questions/47150357/kafka-start-issue-with-windows/47162725">command is incorrect</a></li>
 </ul>
