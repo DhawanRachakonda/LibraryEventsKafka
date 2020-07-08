@@ -24,22 +24,22 @@ public class LibraryEventsController {
         this.producer = producer;
     }
 
+//    @PostMapping("/v1/libraryevent")
+//    public ResponseEntity<LibraryEvent> postLibraryEvent(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException {
+//        this.producer.sendLibraryEvent(libraryEvent);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
+//    }
+//
+//    @PostMapping("/v1/libraryeventsync")
+//    public ResponseEntity<LibraryEvent> postLibraryEventSync(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException, ExecutionException, InterruptedException {
+//        this.producer.sendLibraryEventSync(libraryEvent);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
+//    }
+
     @PostMapping("/v1/libraryevent")
-    public ResponseEntity<LibraryEvent> postLibraryEvent(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException {
-        this.producer.sendLibraryEvent(libraryEvent);
-        return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
-    }
-
-    @PostMapping("/v1/libraryeventsync")
-    public ResponseEntity<LibraryEvent> postLibraryEventSync(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException, ExecutionException, InterruptedException {
-        this.producer.sendLibraryEventSync(libraryEvent);
-        return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
-    }
-
-    @PostMapping("/v1/libraryevent/producerecord")
     public ResponseEntity<LibraryEvent> postLibraryEventUsingProducerRecord(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException, ExecutionException, InterruptedException {
-        this.producer.sendLibraryEventUsingProducerRecord(libraryEvent);
         libraryEvent.setLibraryEventType(LibraryEventType.NEW);
+        this.producer.sendLibraryEventUsingProducerRecord(libraryEvent);
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
     }
 
