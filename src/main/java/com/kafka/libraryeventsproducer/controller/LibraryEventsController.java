@@ -2,6 +2,7 @@ package com.kafka.libraryeventsproducer.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kafka.libraryeventsproducer.domain.LibraryEvent;
+import com.kafka.libraryeventsproducer.domain.LibraryEventType;
 import com.kafka.libraryeventsproducer.producer.LibraryEventProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,7 @@ public class LibraryEventsController {
     @PostMapping("/v1/libraryevent/producerecord")
     public ResponseEntity<LibraryEvent> postLibraryEventUsingProducerRecord(@RequestBody LibraryEvent libraryEvent) throws JsonProcessingException, ExecutionException, InterruptedException {
         this.producer.sendLibraryEventUsingProducerRecord(libraryEvent);
+        libraryEvent.setLibraryEventType(LibraryEventType.NEW);
         return ResponseEntity.status(HttpStatus.CREATED).body(libraryEvent);
     }
 
