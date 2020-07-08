@@ -1,6 +1,8 @@
 package com.kafka.libraryeventsproducer.config;
 
+import com.kafka.libraryeventsproducer.service.LibraryEventsService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +16,7 @@ import org.springframework.retry.backoff.FixedBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +24,8 @@ import java.util.Map;
 @EnableKafka
 @Slf4j
 public class LibraryEventsConsumerConfig {
+
+    LibraryEventsService libraryEventsService;
 
     @Bean
     ConcurrentKafkaListenerContainerFactory<?,?> kafkaListenerContainerFactory(ConcurrentKafkaListenerContainerFactoryConfigurer configurer,
@@ -33,6 +38,23 @@ public class LibraryEventsConsumerConfig {
             log.info("Exception in consumerConfig is {} and the record is {}", thrownException.getMessage(), data);
         });
         factory.setRetryTemplate(retryTemplate());
+        factory.setRecoveryCallback((context -> {
+            if(context.getLastThrowable().getCause() instanceof IllegalArgumentException) {
+                // write logic for recovery...
+                log.info("Inside the recovery logic");
+                // has record, consumer and context.exhausted to get them call
+                // context.getAttribute("record")
+                Arrays.stream(context.attributeNames()).forEach(attributeName -> {
+                    log.info("Attribute name {}", attributeName);
+                    log.info("Attribute Value {}", context.getAttribute(attributeName));
+                });
+                ConsumerRecord<Integer, String> record = (ConsumerRecord<Integer, String>) context.getAttribute("record");
+                this.libraryEventsService.handleRecovery(record);
+            } else {
+                throw new RuntimeException(context.getLastThrowable().getMessage());
+            }
+            return null;
+        }));
         return factory;
     }
 
