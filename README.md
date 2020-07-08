@@ -440,3 +440,31 @@ ssl.key.password=password
 <li><a href="https://stackoverflow.com/questions/47150357/kafka-start-issue-with-windows/47162725">command is incorrect</a></li>
 <li><a href="http://localhost:8087/h2-console/">H2 Console</a></li>
 </ul>
+
+# Curl Commands
+
+## Save
+```
+curl --location --request POST 'http://localhost:8087/v1/libraryevent' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "book": {
+    "bookId": 456,
+    "bookName": "Kafka Using spring boot",
+    "bookAuthor": "Dilip"
+    }
+}'
+```
+## Update
+```
+curl --location --request PUT 'http://localhost:8087/v1/libraryevent' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "libraryEventId": 1,
+    "book": {
+    "bookId": 456,
+    "bookName": "Kafka Using spring boot",
+    "bookAuthor": "Dilip Kumar"
+    }
+}'
+```
